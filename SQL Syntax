@@ -1,0 +1,18 @@
+/* SQL Syntax used to extract data from Google BigQuery */
+
+SELECT
+        i_2014.drg_definition drg_code,
+        h.hospital_overall_rating hospital_rating,
+        avg(i_2014.average_covered_charges) average_covered_charges_2014,
+        avg(i_2014.average_total_payments) average_total_payments_2014,
+        avg(i_2014.average_medicare_payments) average_medicare_payments_2014,
+        avg(i_2015.average_covered_charges) average_covered_charges_2015,
+        avg(i_2015.average_total_payments) average_total_payments_2015,
+        avg(i_2015.average_medicare_payments) average_medicare_payments_2015,
+FROM
+        `bigquery-public-data.cms_medicare.inpatient_charges_2014` i_2014
+LEFT JOIN
+        `bigquery-public-data.cms_medicare.inpatient_charges_2015` i_2015 ON i_2014.drg_definition = i_2015.drg_definition
+INNER JOIN
+        `bigquery-public-data.cms_medicare.hospital_general_info` h ON i_2014.provider_id = h.provider_id
+GROUP BY drg_code, hospital_rating;
